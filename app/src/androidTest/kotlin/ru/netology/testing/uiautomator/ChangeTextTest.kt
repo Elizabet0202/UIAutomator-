@@ -126,19 +126,31 @@ class ChangeTextTest {
     }
 
     @Test
-    fun testOpenTextInNewActivity() {
-        val packageName = MODEL_PACKAGE
-        waitForPackage(packageName)
+fun testOpenTextInNewActivity() {
+    val packageName = MODEL_PACKAGE
+    waitForPackage(packageName)
 
-        device.findObject(By.res(packageName, "userInput")).text = textToSet
-        device.findObject(By.res(packageName, "buttonActivity")).click()
+    val input = device.wait(
+        Until.findObject(By.res(packageName, "userInput")),
+        15000L
+    )
 
-        device.wait(Until.hasObject(By.pkg(packageName)), TIMEOUT)
-        device.wait(Until.hasObject(By.text(textToSet)), TIMEOUT)
+    input.text = textToSet
 
-        val result = device.findObject(By.text(textToSet))
-        assertEquals(textToSet, result.text)
-    }
+    val button = device.wait(
+        Until.findObject(By.res(packageName, "buttonActivity")),
+        15000L
+    )
+
+    button.click()
+
+    val resultObject = device.wait(
+        Until.findObject(By.text(textToSet)),
+        15000L
+    )
+
+    assertEquals(textToSet, resultObject.text)
+}
 }
 
 
